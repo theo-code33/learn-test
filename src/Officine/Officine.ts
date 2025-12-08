@@ -1,80 +1,80 @@
 import { Ingredient } from "../Ingredient/Ingredient";
 
-type Recette = Record<string, string[]>;
+type Recipes = Record<string, string[]>;
 
 export class Officine {
     private stock: Map<string, Ingredient> = new Map();
-    private recettes: Recette;
+    private recipes: Recipes;
 
-    constructor(recettes: Recette) {
-        this.recettes = recettes;
+    constructor(recipes: Recipes) {
+        this.recipes = recipes;
     }
 
-    public rentrer(saisie: string) {
-        const { nom, quantite } = this.parseQuantiteEtNom(saisie);
-        const ingr = this.stock.get(nom) || new Ingredient(nom);
-        ingr.ajouter(quantite);
-        this.stock.set(nom, ingr);
+    public add(search: string) {
+        const { name, quantity } = this.parseQuantityAndName(search);
+        const ingr = this.stock.get(name) || new Ingredient(name);
+        ingr.add(quantity);
+        this.stock.set(name, ingr);
     }
 
-    public quantite(nom: string): number {
-        const normalise = new Ingredient(nom).nom;
-        return this.stock.get(normalise)?.getQuantite() ?? 0;
+    public quantity(name: string): number {
+        const normalize = new Ingredient(name).name;
+        return this.stock.get(normalize)?.getQuantity() ?? 0;
     }
 
-    public preparer(saisie: string): number {
-        const { nom: potionNom, quantite: quantiteDemandee } = this.parseQuantiteEtNom(saisie);
+    public prepare(search: string): number {
+        const { name: potionName, quantity: quantityWished } = this.parseQuantityAndName(search);
 
-        if (!this.recettes[potionNom]) throw new Error(`Recette inconnue : ${potionNom}`);
-        const recette = this.recettes[potionNom];
+        if (!this.recipes[potionName]) throw new Error(`Recipes unknown : ${potionName}`);
+        const recipes = this.recipes[potionName];
 
         let maxPossible = Infinity;
 
-        // Calculer combien on peut produire selon le stock
-        for (const ingrStr of recette) {
-            const { nom: ingrNom, quantite: qte } = this.parseQuantiteEtNom(ingrStr);
-            const enStock = this.quantite(ingrNom);
-            maxPossible = Math.min(maxPossible, Math.floor(enStock / qte));
+        // Count how many we can produce based on stock
+        for (const ingrStr of recipes) {
+            const { name: ingrName, quantity: qte } = this.parseQuantityAndName(ingrStr);
+            const inStock = this.quantity(ingrName);
+            maxPossible = Math.min(maxPossible, Math.floor(inStock / qte));
         }
 
-        const aProduire = Math.min(maxPossible, quantiteDemandee);
-        if (aProduire === 0) return 0;
+        const toProduce = Math.min(maxPossible, quantityWished);
+        if (toProduce === 0) return 0;
 
-        // Déduire les ingrédients
-        for (const ingrStr of recette) {
-            const { nom: ingrNom, quantite: qte } = this.parseQuantiteEtNom(ingrStr);
-            const ingr = this.stock.get(ingrNom)!;
-            ingr.retirer(qte * aProduire);
+        // Remove ingredients from stock
+        for (const ingrStr of recipes) {
+            const { name: ingrName, quantity: qte } = this.parseQuantityAndName(ingrStr);
+            const ingr = this.stock.get(ingrName)!;
+            ingr.remove(qte * toProduce);
         }
 
-        // Ajouter la potion produite
-        const potion = this.stock.get(potionNom) || new Ingredient(potionNom);
-        potion.ajouter(aProduire);
-        this.stock.set(potionNom, potion);
+        // Add the produced potion to stock
+        const potion = this.stock.get(potionName) || new Ingredient(potionName);
+        potion.add(toProduce);
+        this.stock.set(potionName, potion);
 
-        return aProduire;
+        return toProduce;
     }
 
-    private parseQuantiteEtNom(saisie: string): { nom: string; quantite: number } {
-        const parts = saisie.trim().split(" ");
-        let quantite = parseInt(parts[0]);
-        let nom: string;
+    private parseQuantityAndName(search: string): { name: string; quantity: number } {
+        const parts = search.trim().split(" ");
+        let quantity = parseInt(parts[0]);
+        let name: string;
 
-        if (isNaN(quantite)) {
-            quantite = 1;
-            nom = saisie;
+        if (isNaN(quantity)) {
+            quantity = 1;
+            name = search;
         } else {
-            nom = parts.slice(1).join(" ");
+            name = parts.slice(1).join(" ");
         }
 
-        const normalise = new Ingredient(nom).nom;
-        return { nom: normalise, quantite };
+        const normalise = new Ingredient(name).name;
+        return { name: normalise, quantity };
     }
 
-    public afficherStock() {
-        console.log("--- Stock actuel ---");
-        for (const ingr of this.stock.values()) {
-            console.log(ingr.toString());
+    public printStock() {
+        console.log("--- Current Stock ---");
+        for (const ingredient of this.stock.values()) {
+            console.log(ingredient.toString());
         }
         console.log("-------------------");
     }

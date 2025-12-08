@@ -1,47 +1,47 @@
 export class Ingredient {
-    public nom: string;
-    private quantite: number;
+    public name: string;
+    private quantity: number;
 
-    constructor(nom: string, quantite = 0) {
-        this.nom = this.normaliserNom(nom);
-        this.quantite = quantite;
+    constructor(name: string, quantity = 0) {
+        this.name = this.parseName(name);
+        this.quantity = quantity;
     }
 
-    public getQuantite(): number {
-        return this.quantite;
+    public getQuantity(): number {
+        return this.quantity;
     }
 
-    public ajouter(qte: number) {
-        if (qte < 0) throw new Error("Quantité négative");
-        this.quantite += qte;
+    public add(qte: number) {
+        if (qte < 0) throw new Error("Negative quantity");
+        this.quantity += qte;
     }
 
-    public retirer(qte: number) {
-        if (qte < 0) throw new Error("Quantité négative");
-        if (qte > this.quantite) throw new Error("Stock insuffisant");
-        this.quantite -= qte;
+    public remove(qte: number) {
+        if (qte < 0) throw new Error("Negative quantity");
+        if (qte > this.quantity) throw new Error("Insufficient Stock");
+        this.quantity -= qte;
     }
 
-    private normaliserNom(nom: string): string {
-        nom = nom.toLowerCase().trim();
-        if (nom.startsWith("yeux de grenouille")) return "œil de grenouille";
-        if (nom.startsWith("œil de grenouille")) return "œil de grenouille";
-        if (nom.startsWith("larmes de brume funèbre") || nom.startsWith("larme de brume funèbre"))
+    private parseName(name: string): string {
+        name = name.toLowerCase().trim();
+        if (name.startsWith("yeux de grenouille")) return "œil de grenouille";
+        if (name.startsWith("œil de grenouille")) return "œil de grenouille";
+        if (name.startsWith("larmes de brume funèbre") || name.startsWith("larme de brume funèbre"))
             return "larme de brume funèbre";
-        if (nom.startsWith("radicelles de racine hurlante") || nom.startsWith("radicelle de racine hurlante"))
+        if (name.startsWith("radicelles de racine hurlante") || name.startsWith("radicelle de racine hurlante"))
             return "radicelle de racine hurlante";
-        if (nom.startsWith("pincées de poudre de lune") || nom.startsWith("pincée de poudre de lune"))
+        if (name.startsWith("pincées de poudre de lune") || name.startsWith("pincée de poudre de lune"))
             return "pincée de poudre de lune";
-        if (nom.startsWith("crocs de troll") || nom.startsWith("croc de troll"))
+        if (name.startsWith("crocs de troll") || name.startsWith("croc de troll"))
             return "croc de troll";
-        if (nom.startsWith("fragments d'écaille de dragonnet") || nom.startsWith("fragment d'écaille de dragonnet"))
+        if (name.startsWith("fragments d'écaille de dragonnet") || name.startsWith("fragment d'écaille de dragonnet"))
             return "fragment d'écaille de dragonnet";
-        if (nom.startsWith("gouttes de sang de citrouille") || nom.startsWith("goutte de sang de citrouille"))
+        if (name.startsWith("gouttes de sang de citrouille") || name.startsWith("goutte de sang de citrouille"))
             return "goutte de sang de citrouille";
-        return nom;
+        return name;
     }
 
     public toString(): string {
-        return `${this.quantite} ${this.nom}`;
+        return `${this.quantity} ${this.name}`;
     }
 }
