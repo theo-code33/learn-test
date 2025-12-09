@@ -18,6 +18,26 @@ export class Laboratory {
     return this.substancesQuantities.get(substance) || 0;
   }
 
+  public addReactionSubstances(substance: string, reactionSubstances: Array<SubstanceQuantity>): void {
+    const normalize = substance.trim().toLowerCase();
+    const normalizeNewReactionSubstances = reactionSubstances.map((reactionSubstance) => {
+      const reactionParts = reactionSubstance.trim().split(" ");
+      let reactionQuantity = parseInt(reactionParts[0]);
+
+      if (isNaN(reactionQuantity) || reactionQuantity <= 0) {
+        throw new Error(`Quantité invalide dans : ${reactionSubstance}`);
+      }
+      return reactionSubstance.trim().toLowerCase() as SubstanceQuantity;
+    });
+    const haveReactionSubstances = this.dictionary.get(normalize);
+    if(haveReactionSubstances) {
+      const updatedReactionSubstances = haveReactionSubstances.concat(normalizeNewReactionSubstances);
+      this.dictionary.set(normalize, updatedReactionSubstances);
+    } else {
+      this.dictionary.set(normalize, normalizeNewReactionSubstances);
+    }
+  }
+
   public add(substance: SubstanceQuantity, reactionSubstances?: Array<SubstanceQuantity>): void {
     const parts = substance.trim().split(" ");
     let quantity = parseInt(parts[0]);
@@ -35,32 +55,14 @@ export class Laboratory {
       this.substancesQuantities.set(normalize, quantity);
       this.knownSubstances.push(normalize);
       if(reactionSubstances && reactionSubstances.length > 0) {
-        const normalizeNewReactionSubstances = reactionSubstances.map((reactionSubstance) => {
-          const reactionParts = reactionSubstance.trim().split(" ");
-          let reactionQuantity = parseInt(reactionParts[0]);
-
-          if (isNaN(reactionQuantity)) {
-            throw new Error(`Quantité invalide dans : ${reactionSubstance}`);
-          }
-          return reactionSubstance.trim().toLowerCase() as SubstanceQuantity;
-        });
-        this.dictionary.set(normalize, normalizeNewReactionSubstances);
+        this.addReactionSubstances(normalize, reactionSubstances);
       }
     } else {
       const currentQuantity = this.substancesQuantities.get(normalize) || 0;
       const newQuantity = currentQuantity + quantity;
       this.substancesQuantities.set(normalize, newQuantity);
       if(reactionSubstances && reactionSubstances.length > 0) {
-        const normalizeNewReactionSubstances = reactionSubstances.map((reactionSubstance) => {
-          const reactionParts = reactionSubstance.trim().split(" ");
-          let reactionQuantity = parseInt(reactionParts[0]);
-
-          if (isNaN(reactionQuantity) || reactionQuantity <= 0) {
-            throw new Error(`Quantité invalide dans : ${reactionSubstance}`);
-          }
-          return reactionSubstance.trim().toLowerCase() as SubstanceQuantity;
-        });
-        this.dictionary.set(normalize, normalizeNewReactionSubstances);
+        this.addReactionSubstances(normalize, reactionSubstances);
       }
     }
   }
