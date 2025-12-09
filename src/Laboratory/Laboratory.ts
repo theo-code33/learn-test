@@ -23,7 +23,7 @@ export class Laboratory {
     let quantity = parseInt(parts[0]);
     let name: string;
 
-    if (isNaN(quantity)) {
+    if (isNaN(quantity) || quantity <= 0) {
       throw new Error(`Quantité invalide dans : ${substance}`);
     } else {
       name = parts.slice(1).join(" ").trim().toLowerCase();
