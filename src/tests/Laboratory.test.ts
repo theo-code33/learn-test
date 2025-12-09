@@ -108,4 +108,20 @@ describe('Classe Laboratory', () => {
 
     expect(distilledWaterQuantity).toBe(1);
   })
+
+  test('Ajouter une liste de susbtances réactionnel avec une quantité invalide à une substance', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+
+    expect(() => {
+      laboratory.add("1 eau distillée", [
+        // @ts-ignore
+        "alcool éthylique",
+        "2 acide sulfurique"
+      ]);
+    }).toThrow("Quantité invalide dans : alcool éthylique");
+  })
 })
