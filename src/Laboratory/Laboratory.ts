@@ -44,13 +44,24 @@ export class Laboratory {
           }
           return reactionSubstance.trim().toLowerCase() as SubstanceQuantity;
         });
-        const existingReactions = this.dictionary.get(normalize) || [];
-        this.dictionary.set(normalize, existingReactions.concat(normalizeNewReactionSubstances));
+        this.dictionary.set(normalize, normalizeNewReactionSubstances);
       }
     } else {
       const currentQuantity = this.substancesQuantities.get(normalize) || 0;
       const newQuantity = currentQuantity + quantity;
       this.substancesQuantities.set(normalize, newQuantity);
+      if(reactionSubstances && reactionSubstances.length > 0) {
+        const normalizeNewReactionSubstances = reactionSubstances.map((reactionSubstance) => {
+          const reactionParts = reactionSubstance.trim().split(" ");
+          let reactionQuantity = parseInt(reactionParts[0]);
+
+          if (isNaN(reactionQuantity)) {
+            throw new Error(`Quantité invalide dans : ${reactionSubstance}`);
+          }
+          return reactionSubstance.trim().toLowerCase() as SubstanceQuantity;
+        });
+        this.dictionary.set(normalize, normalizeNewReactionSubstances);
+      }
     }
   }
 }
