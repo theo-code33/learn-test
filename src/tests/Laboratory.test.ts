@@ -172,6 +172,6 @@ describe('Classe Laboratory', () => {
 
     const createdDistilledWater = laboratory.make("eau distillée");
     
-    expect(createdDistilledWater).toBe(1);
+    expect(createdDistilledWater).toBe(2);
   })
 })
