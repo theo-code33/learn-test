@@ -32,4 +32,17 @@ describe('Classe Laboratory', () => {
     const quantity = laboratory.getQuantity("Eau Distillée");
     expect(quantity).toBe(0);
   })
+
+  test('Ajouter une quantité à une substance connue et vérifier la quantité', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+    
+    laboratory.add("eau distillée", 5);
+
+    const quantity = laboratory.getQuantity("eau distillée");
+    expect(quantity).toBe(5);
+  })
 })

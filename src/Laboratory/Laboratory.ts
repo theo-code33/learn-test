@@ -14,4 +14,8 @@ export class Laboratory {
     }
     return this.substancesQuantities.get(substance) || 0;
   }
+
+  public add(substance: string, quantity: number): void {
+    return void 0;
+  }
 }
