@@ -65,7 +65,8 @@ describe('Classe Laboratory', () => {
       "acide sulfurique"
     ]);
     expect(() => {
-      laboratory.add("eau distillée");
+      // @ts-ignore
+      laboratory.add("eau distillée")
     }).toThrow("Quantité invalide dans : eau distillée");
   })
 
