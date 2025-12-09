@@ -154,4 +154,24 @@ describe('Classe Laboratory', () => {
       ]);
     }).toThrow("Quantité invalide dans : 0 alcool éthylique");
   })
+
+  test('Réaliser une substance avec des substances réactionnelles déjà existantes', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+
+    laboratory.add("10 alcool éthylique");
+    laboratory.add("5 acide sulfurique");
+
+    laboratory.add("1 eau distillée", [
+      "5 alcool éthylique",
+      "2 acide sulfurique"
+    ]);
+
+    const createdDistilledWater = laboratory.make("eau distillée");
+    
+    expect(createdDistilledWater).toBe(1);
+  })
 })
