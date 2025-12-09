@@ -68,4 +68,21 @@ describe('Classe Laboratory', () => {
       laboratory.add("eau distillée");
     }).toThrow("Quantité invalide dans : eau distillée");
   })
+
+  test('Ajouter une liste de susbtances réactionnel avec des quantités à une substance', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+
+    laboratory.add("1 eau distillée", [
+      "5 alcool éthylique",
+      "2 acide sulfurique"
+    ]);
+    
+    const distilledWaterQuantity = laboratory.getQuantity("eau distillée");
+
+    expect(distilledWaterQuantity).toBe(1);
+  })
 })
