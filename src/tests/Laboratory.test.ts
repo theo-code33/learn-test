@@ -40,7 +40,7 @@ describe('Classe Laboratory', () => {
       "acide sulfurique"
     ]);
     
-    laboratory.add("eau distillée", 5);
+    laboratory.add("5 eau distillée");
 
     const quantity = laboratory.getQuantity("eau distillée");
     expect(quantity).toBe(5);
@@ -52,7 +52,7 @@ describe('Classe Laboratory', () => {
       "alcool éthylique",
       "acide sulfurique"
     ]);
-    laboratory.add("potion magique", 3);
+    laboratory.add("3 potion magique");
 
     const quantity = laboratory.getQuantity("potion magique");
     expect(quantity).toBe(3);
