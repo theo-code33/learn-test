@@ -55,7 +55,7 @@ export class Laboratory {
           const reactionParts = reactionSubstance.trim().split(" ");
           let reactionQuantity = parseInt(reactionParts[0]);
 
-          if (isNaN(reactionQuantity)) {
+          if (isNaN(reactionQuantity) || reactionQuantity <= 0) {
             throw new Error(`Quantité invalide dans : ${reactionSubstance}`);
           }
           return reactionSubstance.trim().toLowerCase() as SubstanceQuantity;
