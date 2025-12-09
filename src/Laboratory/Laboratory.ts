@@ -7,7 +7,9 @@ export class Laboratory {
   }
 
   public getQuantity(substance: string): number {
-    if (!this.knownSubstances.includes(substance)) {
+    const normalize = substance.trim().toLowerCase();
+    const isKnown = this.knownSubstances.includes(normalize);
+    if (!isKnown) {
       throw new Error(`Substance inconnue : ${substance}`);
     }
     return this.substancesQuantities.get(substance) || 0;
