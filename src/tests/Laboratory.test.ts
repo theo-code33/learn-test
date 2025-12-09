@@ -70,6 +70,28 @@ describe('Classe Laboratory', () => {
     }).toThrow("Quantité invalide dans : eau distillée");
   })
 
+  test('Ajouter une quantité négative à une substance', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+    expect(() => {
+      laboratory.add("-5 eau distillée")
+    }).toThrow("Quantité invalide dans : -5 eau distillée");
+  })
+
+  test('Ajouter une quantité de zéro à une substance', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+    expect(() => {
+      laboratory.add("0 eau distillée")
+    }).toThrow("Quantité invalide dans : 0 eau distillée");
+  })
+
   test('Ajouter une liste de susbtances réactionnel avec des quantités à une substance', () => {
     const laboratory = new Laboratory([
       "eau distillée",
