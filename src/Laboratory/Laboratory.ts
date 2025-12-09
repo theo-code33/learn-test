@@ -16,6 +16,15 @@ export class Laboratory {
   }
 
   public add(substance: string, quantity: number): void {
-    return void 0;
+    const normalize = substance.trim().toLowerCase();
+    const isKnown = this.knownSubstances.includes(normalize);
+    if(!isKnown) {
+      this.substancesQuantities.set(normalize, quantity);
+      this.knownSubstances.push(normalize);
+    } else {
+      const currentQuantity = this.substancesQuantities.get(normalize) || 0;
+      const newQuantity = currentQuantity + quantity;
+      this.substancesQuantities.set(normalize, newQuantity);
+    }
   }
 }
