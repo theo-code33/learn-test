@@ -57,4 +57,15 @@ describe('Classe Laboratory', () => {
     const quantity = laboratory.getQuantity("potion magique");
     expect(quantity).toBe(3);
   })
+
+  test('Ajouter une quantité invalide à une substance', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+    expect(() => {
+      laboratory.add("eau distillée");
+    }).toThrow("Quantité invalide dans : eau distillée");
+  })
 })
