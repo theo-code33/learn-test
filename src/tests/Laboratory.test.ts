@@ -124,4 +124,34 @@ describe('Classe Laboratory', () => {
       ]);
     }).toThrow("Quantité invalide dans : alcool éthylique");
   })
+
+  test('Ajouter une liste de susbtances réactionnel avec une quantité négative à une substance', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+
+    expect(() => {
+      laboratory.add("1 eau distillée", [
+        "-5 alcool éthylique",
+        "2 acide sulfurique"
+      ]);
+    }).toThrow("Quantité invalide dans : -5 alcool éthylique");
+  })
+
+  test('Ajouter une liste de susbtances réactionnel avec une quantité zéro à une substance', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+
+    expect(() => {
+      laboratory.add("1 eau distillée", [
+        "0 alcool éthylique",
+        "2 acide sulfurique"
+      ]);
+    }).toThrow("Quantité invalide dans : 0 alcool éthylique");
+  })
 })
