@@ -22,4 +22,14 @@ describe('Classe Laboratory', () => {
       laboratory.getQuantity("potion magique");
     }).toThrow("Substance inconnue : potion magique");
   })
+
+  test('Obtenir la quantité d\'une substance connue avec des majuscules', () => {
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique"
+    ]);
+    const quantity = laboratory.getQuantity("Eau Distillée");
+    expect(quantity).toBe(0);
+  })
 })
