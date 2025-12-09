@@ -18,7 +18,7 @@ export class Laboratory {
     return this.substancesQuantities.get(substance) || 0;
   }
 
-  public addReactionSubstances(substance: string, reactionSubstances: Array<SubstanceQuantity>): void {
+  private addReactionSubstances(substance: string, reactionSubstances: Array<SubstanceQuantity>): void {
     const normalize = substance.trim().toLowerCase();
     const normalizeNewReactionSubstances = reactionSubstances.map((reactionSubstance) => {
       const reactionParts = reactionSubstance.trim().split(" ");
@@ -65,5 +65,51 @@ export class Laboratory {
         this.addReactionSubstances(normalize, reactionSubstances);
       }
     }
+  }
+
+  public make(substance: string): number {
+    const normalize = substance.trim().toLowerCase();
+    const isKnown = this.knownSubstances.includes(normalize);
+    let createdQuantity = 0;
+    let canMake = true;
+    if (!isKnown) {
+      throw new Error(`Substance inconnue : ${substance}`);
+    }
+    
+    const reactionSubstances = this.dictionary.get(normalize);
+    if (!reactionSubstances || reactionSubstances.length === 0) {
+      throw new Error(`Aucune réaction définie pour : ${substance}`);
+    }
+
+    do {
+      for (const reactionSubstance of reactionSubstances) {
+        const parts = reactionSubstance.trim().split(" ");
+        let quantity = parseInt(parts[0]);
+        let name = parts.slice(1).join(" ").trim().toLowerCase();
+
+        const currentQuantity = this.substancesQuantities.get(name) || 0;
+        if (currentQuantity < quantity) {
+          canMake = false;
+          break;
+        }
+      }
+
+      if (canMake === true) {
+        for (const reactionSubstance of reactionSubstances) {
+          const parts = reactionSubstance.trim().split(" ");
+          let quantity = parseInt(parts[0]);
+          let name = parts.slice(1).join(" ").trim().toLowerCase();
+
+          const currentQuantity = this.substancesQuantities.get(name) || 0;
+          this.substancesQuantities.set(name, currentQuantity - quantity);
+        }
+        createdQuantity += 1;
+      }
+    } while (canMake === true);
+
+    const currentQuantity = this.substancesQuantities.get(normalize) || 0;
+    this.substancesQuantities.set(normalize, currentQuantity + createdQuantity);
+
+    return createdQuantity;
   }
 }
