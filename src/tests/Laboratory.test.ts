@@ -1,5 +1,6 @@
 import { test } from "@jest/globals"
 import { Laboratory } from "../Laboratory/Laboratory";
+import { Product } from "../types/laboratory.types";
 
 describe('Classe Laboratory', () => {
   test("Obtenir la quantité d'une substance connue", () => {
@@ -7,7 +8,7 @@ describe('Classe Laboratory', () => {
       "eau distillée",
       "alcool éthylique",
       "acide sulfurique"
-    ]);
+    ], new Map());
     const quantity = laboratory.getQuantity("eau distillée");
     expect(quantity).toBe(0);
   })
@@ -17,7 +18,7 @@ describe('Classe Laboratory', () => {
       "eau distillée",
       "alcool éthylique",
       "acide sulfurique"
-    ]);
+    ], new Map());
     expect(() => {
       laboratory.getQuantity("potion magique");
     }).toThrow("Substance inconnue : potion magique");
@@ -28,7 +29,7 @@ describe('Classe Laboratory', () => {
       "eau distillée",
       "alcool éthylique",
       "acide sulfurique"
-    ]);
+    ], new Map());
     const quantity = laboratory.getQuantity("Eau Distillée");
     expect(quantity).toBe(0);
   })
@@ -38,7 +39,7 @@ describe('Classe Laboratory', () => {
       "eau distillée",
       "alcool éthylique",
       "acide sulfurique"
-    ]);
+    ], new Map());
     
     laboratory.add("5 eau distillée");
 
@@ -46,16 +47,14 @@ describe('Classe Laboratory', () => {
     expect(quantity).toBe(5);
   })
 
-  test('Ajouter une quantité à une substance inconnue', () => {
+  test('Ajouter une substance inconnue', () => {
     const laboratory = new Laboratory([
       "eau distillée",
       "alcool éthylique",
       "acide sulfurique"
-    ]);
-    laboratory.add("3 potion magique");
-
-    const quantity = laboratory.getQuantity("potion magique");
-    expect(quantity).toBe(3);
+    ], new Map());
+    
+    expect(() => laboratory.add("3 potion magique")).toThrow("Substance inconnue : potion magique");
   })
 
   test('Ajouter une quantité invalide à une substance', () => {
@@ -63,9 +62,25 @@ describe('Classe Laboratory', () => {
       "eau distillée",
       "alcool éthylique",
       "acide sulfurique"
-    ]);
+    ], new Map());
     expect(() => {
-      laboratory.add("eau distillée");
+      // @ts-ignore
+      laboratory.add("eau distillée")
     }).toThrow("Quantité invalide dans : eau distillée");
+  })
+
+  test('Ajouter un dictionnaire de réactions chimiques', () => {
+    const dictionary = new Map<string, Array<Product>>([
+      ["potion magique", [{ name: "herbe rare", quantity: 2 }, { name: "eau distillée", quantity: 1 }]],
+      ["élixir de vie", [{ name: "potion magique", quantity: 3 }, { name: "alcool éthylique", quantity: 2 }]]
+    ])
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique",
+      "herbe rare"
+    ], dictionary);
+    
+    expect(laboratory).toBeInstanceOf(Laboratory);
   })
 })
