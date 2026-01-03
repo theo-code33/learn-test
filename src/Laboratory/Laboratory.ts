@@ -89,4 +89,35 @@ export class Laboratory {
     const newQuantity = currentQuantity + quantity;
     this.quantities.set(normalize, newQuantity);
   }
+
+  public make(product: string): number {
+    const normalizedProduct = this.normalizeSubstanceName(product);
+    this.ensureKnown(normalizedProduct, product);
+
+    const recipe = this.dictionary.get(normalizedProduct);
+    if (!recipe || recipe.length === 0) {
+      throw new Error(`Réaction inconnue : ${product}`);
+    }
+
+    const quantityCanProduce = recipe.reduce((min, ingredient) => {
+      const available = this.quantities.get(ingredient.name) ?? 0;
+      const possible = available / ingredient.quantity;
+      return Math.min(min, possible);
+    }, Number.POSITIVE_INFINITY);
+
+    if (quantityCanProduce <= 0) {
+      return 0;
+    }
+
+    recipe.forEach((ingredient) => {
+      const current = this.quantities.get(ingredient.name) ?? 0;
+      const usedQuantity = ingredient.quantity * quantityCanProduce;
+      this.quantities.set(ingredient.name, current - usedQuantity);
+    });
+
+    const currentProductQuantity = this.quantities.get(normalizedProduct) ?? 0;
+    this.quantities.set(normalizedProduct, currentProductQuantity + quantityCanProduce);
+
+    return quantityCanProduce;
+  }
 }
