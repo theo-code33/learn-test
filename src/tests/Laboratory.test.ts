@@ -99,4 +99,23 @@ describe('Classe Laboratory', () => {
     const quantity = laboratory.getQuantity("élixir de vie");
     expect(quantity).toBe(0)
   })
+
+  test('Créer une réaction chimique et vérifier les quantités des substances', () => {
+    const dictionary = new Map<string, Array<Product>>([
+      ["potion magique", [{ name: "herbe rare", quantity: 2 }, { name: "eau distillée", quantity: 1 }]],
+      ["élixir de vie", [{ name: "potion magique", quantity: 3 }, { name: "alcool éthylique", quantity: 2 }]]
+    ])
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique",
+      "herbe rare"
+    ], dictionary);
+
+    laboratory.add('4 herbe rare');
+    laboratory.add('2 eau distillée');
+
+    const quantity = laboratory.make('potion magique');
+    expect(quantity).toBe(2);
+  })
 })
