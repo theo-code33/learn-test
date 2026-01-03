@@ -40,7 +40,7 @@ describe('Classe Laboratory', () => {
       "alcool éthylique",
       "acide sulfurique"
     ], new Map());
-    
+
     laboratory.add("5 eau distillée");
 
     const quantity = laboratory.getQuantity("eau distillée");
@@ -53,7 +53,7 @@ describe('Classe Laboratory', () => {
       "alcool éthylique",
       "acide sulfurique"
     ], new Map());
-    
+
     expect(() => laboratory.add("3 potion magique")).toThrow("Substance inconnue : potion magique");
   })
 
@@ -80,7 +80,23 @@ describe('Classe Laboratory', () => {
       "acide sulfurique",
       "herbe rare"
     ], dictionary);
-    
+
     expect(laboratory).toBeInstanceOf(Laboratory);
+  })
+
+  test('Ajouter une réaction chimique inconnue', () => {
+    const dictionary = new Map<string, Array<Product>>([
+      ["potion magique", [{ name: "herbe rare", quantity: 2 }, { name: "eau distillée", quantity: 1 }]],
+      ["élixir de vie", [{ name: "potion magique", quantity: 3 }, { name: "eau distillée", quantity: 2 }]]
+    ])
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique",
+      "herbe rare"
+    ], dictionary);
+
+    const quantity = laboratory.getQuantity("élixir de vie");
+    expect(quantity).toBe(0)
   })
 })
