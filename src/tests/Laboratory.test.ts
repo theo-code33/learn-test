@@ -118,4 +118,51 @@ describe('Classe Laboratory', () => {
     const quantity = laboratory.make('potion magique');
     expect(quantity).toBe(2);
   })
+
+  test('Créer une réaction chimique avec des substances insuffisantes', () => {
+    const dictionary = new Map<string, Array<Product>>([
+      ["potion magique", [{ name: "herbe rare", quantity: 2 }, { name: "eau distillée", quantity: 1 }]],
+      ["élixir de vie", [{ name: "potion magique", quantity: 3 }, { name: "alcool éthylique", quantity: 2 }]]
+    ])
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique",
+      "herbe rare"
+    ], dictionary);
+
+    laboratory.add('1 eau distillée');
+
+    const quantity = laboratory.make('potion magique');
+    expect(quantity).toBe(0);
+  })
+
+  test('Créer une réaction chimique avec un produit qui doit être créé', () => {
+    const dictionary = new Map<string, Array<Product>>([
+      ["potion magique", [{ name: "herbe rare", quantity: 2 }, { name: "eau distillée", quantity: 1 }]],
+      ["élixir de vie", [{ name: "potion magique", quantity: 3 }, { name: "alcool éthylique", quantity: 2 }]]
+    ])
+    const laboratory = new Laboratory([
+      "eau distillée",
+      "alcool éthylique",
+      "acide sulfurique",
+      "herbe rare"
+    ], dictionary);
+
+    laboratory.add('6 herbe rare');
+    laboratory.add('3 eau distillée');
+    laboratory.add('4 alcool éthylique');
+
+    const quantityPotion = laboratory.make('potion magique');
+    expect(quantityPotion).toBe(3);
+
+    const quantityElixir = laboratory.make('élixir de vie');
+    expect(quantityElixir).toBe(1);
+
+    const finalPotionQuantity = laboratory.getQuantity('potion magique');
+    expect(finalPotionQuantity).toBe(0);
+
+    const finalElixirQuantity = laboratory.getQuantity('élixir de vie');
+    expect(finalElixirQuantity).toBe(1);
+  })
 })
